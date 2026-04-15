@@ -1,0 +1,40 @@
+name: Deployment
+
+on:
+  push:
+    branches:
+    - master
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v0.1.6
+        with: 
+          host: ${{ secrets.EC2_HOST }} 
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_KEY }}
+          script: |
+            cd /home/ec2-user/projects/09-docker-aws
+
+            git pull origin master
+            
+            # Build Frontend
+            cd Frontend
+            npm install
+            npm run build
+
+            # Copy /dist/* to Backend/public
+            cd ../
+            rm -rf Backend/public
+            mkdir -p Backend/public
+            cp -r Frontend/dist/* Backend/public/
+
+            # Restart Backend            
+            cd Backend
+            npm install
+            pm2 restart all
