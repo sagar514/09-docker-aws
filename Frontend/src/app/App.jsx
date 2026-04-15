@@ -107,7 +107,7 @@ function App() {
   return (
     <>
       <main 
-        className="h-screen w-full bg-red-950 flex gap-4 p-2"
+        className="h-screen w-full bg-gray-950 flex gap-4 p-2"
       >
         <aside
           className="h-full w-1/4 bg-amber-50 rounded-lg"
