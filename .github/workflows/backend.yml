@@ -1,0 +1,30 @@
+name: EC2 Deployment
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "Backend/**"
+      - ".github/workflows/backend.yml"
+
+jobs:
+  deploy-to-ec2:
+    
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v0.1.6
+        with:
+          host: ${{ secrets.AWS_EC2_HOST }}
+          username: ${{ secrets.AWS_EC2_USERNAME }}
+          key: ${{ secrets.AWS_EC2_KEY }}
+          script: |
+            cd /home/ec2-user/projects/09-docker-aws
+
+            git pull origin master
+
+            cd Backend
+            npm ci
+            npx pm2 reload all
