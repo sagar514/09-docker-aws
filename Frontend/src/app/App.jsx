@@ -42,7 +42,8 @@ function App() {
     if(username) {
 
       // let serverUrl = "http://localhost:5000";
-      let serverUrl = "/";
+      // let serverUrl = "/";
+      let serverUrl = import.meta.env.VITE_API_URL;
 
       const provider = new SocketIOProvider(serverUrl, "monaco", yDoc, { autoConnect: true });
 
